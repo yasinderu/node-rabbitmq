@@ -37,7 +37,7 @@ After the service is running, you can open another terminal in the root project 
 docker compose exec consumer /bin/bash -c 'for ((i=1;i<=2;i++)); do node producer.js; done'
 ```
 
-The above command will triger the producer.js file to send two message to RabbitMQ queue which then will be consumed by the consumer which will handle the message. This action is for demo or testing purpose only. Idealy the message should comming from a client app.
+The above command will triger the producer.js file to send two messages to RabbitMQ queue which then will be consumed by the consumer which will handle the message. This action is for demo or testing purpose only. Idealy the message should comming from a client app.
 
 ### Monitor the logs
 
