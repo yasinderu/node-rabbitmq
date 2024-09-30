@@ -1,24 +1,25 @@
 const amqplib = require("amqplib");
-const amqpUrl = process.env.AMQP_URL || "amqp://localhost:5673";
 
 const admin = require("firebase-admin");
-const serviceAccount = require("./fcmServiceAccountKey.json");
+const serviceAccount = require("./fcmServiceAccountKey");
 
 const Fcm = require("./db/fcm.model");
+const { validateMessage } = require("./utils");
+
+const amqpUrl = process.env.AMQP_URL;
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-async function processMessage(msg) {
-  console.log(msg.content.toString(), "Call FCM API here");
-  const registrationToken =
-    "f5guBQAaJCUlKM7tYHGiyb:APA91bG4omJuWGi9D3COjqqN2-GdJKiD95W7QeOcxA3Tl4y7h_c0IIJPo492s6eIIqtPVe7-of369cPqFElrVlp0IRdMWILEcGbZgiLM811YgKaTnU8LBg1-6ZT7ltFj85klOJts2J9o";
+async function processMessage(msgContent) {
+  console.log(JSON.stringify(msgContent), "Call FCM API here");
+  const registrationToken = process.env.DEVICE_REGRISTATION_TOKEN;
 
   const message = {
     notification: {
       title: "FCM message",
-      body: msg.text,
+      body: msgContent.text,
       image: "image",
     },
     token: registrationToken,
@@ -59,15 +60,27 @@ async function processMessage(msg) {
   await channel.consume(
     queue,
     async (msg) => {
-      console.log("processing messages");
-      await processMessage(msg);
-      const fcmJob = await Fcm.create({
-        identifier: "fcm-msg-a1beff5ac",
-        deliverAt: "2021-01-31T12:34:56Z",
-      });
-      console.log("fcm-job", fcmJob);
-      await channel.ack(msg);
-      channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(msg)));
+      try {
+        console.log("processing messages");
+
+        const msgContent = msg.content.toString();
+        const msgIsValid = validateMessage(JSON.parse(msgContent));
+
+        if (!msgIsValid) {
+          throw new Error("message is invalid");
+        }
+
+        await processMessage(JSON.parse(msgContent));
+        const fcmJob = await Fcm.create({
+          identifier: "fcm-msg-a1beff5ac",
+          deliverAt: "2021-01-31T12:34:56Z",
+        });
+        await channel.ack(msg);
+        channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(msg)));
+      } catch (error) {
+        console.log("Error processing message:", error.message);
+        channel.nack(msg, true, false);
+      }
     },
     {
       noAck: false,

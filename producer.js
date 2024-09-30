@@ -1,5 +1,5 @@
 const amqplib = require("amqplib");
-const amqpUrl = process.env.AMQP_URL || "amqp://localhost:5673";
+const amqpUrl = process.env.AMQP_URL;
 
 (async () => {
   const connection = await amqplib.connect(amqpUrl, "heartbeat=60");
