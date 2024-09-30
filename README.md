@@ -27,6 +27,8 @@ Since this application is using docker, you need to have Docker already installe
 docker compose up
 ```
 
+To check if the RabbitMQ is running fine, you can go to `http://localhost:15673`.
+
 ### How to test the service functionality
 
 After the service is running, you can open another terminal in the root project directory and run below command.

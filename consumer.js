@@ -76,7 +76,16 @@ async function processMessage(msgContent) {
           deliverAt: "2021-01-31T12:34:56Z",
         });
         await channel.ack(msg);
-        channel.publish(exchange, routingKey, Buffer.from(JSON.stringify(msg)));
+
+        const msgToBePublished = {
+          identifier: "fcm-msg-a1beff5ac",
+          deliverAt: "2021-01-31T12:34:56Z",
+        };
+        channel.publish(
+          exchange,
+          routingKey,
+          Buffer.from(JSON.stringify(msgToBePublished))
+        );
       } catch (error) {
         console.log("Error processing message:", error.message);
         channel.nack(msg, true, false);
