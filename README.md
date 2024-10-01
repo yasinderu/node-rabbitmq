@@ -29,6 +29,16 @@ docker compose up
 
 To check if the RabbitMQ is running fine, you can go to `http://localhost:15673`.
 
+## Module not found
+
+If you encounter module not found error. Please run :
+
+```
+npm install
+```
+
+It will fix the issue. After executing above command, you can run `docker compose up` again.
+
 ### How to test the service functionality
 
 After the service is running, you can open another terminal in the root project directory and run below command.
