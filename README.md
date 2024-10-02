@@ -11,9 +11,13 @@ The purpose of this service is to consume an incoming message from RabbitMQ queu
 5. MySQL
 6. Firebase
 
+### Project config
+
+All of the configuration in the app should stored in `.env` file. You can refer to `.env.sample` file and create a new `.env` file on your local.
+
 ### Firebase
 
-Since this service is integrating firebase for sending FCM message, it requires firebase service account config that is stored in .env file. For the purpose of demo, this service uses the author's service account configuration. You can use your own firebase service account config.
+Since this service is integrating firebase for sending FCM message, it requires firebase service account config that is stored in `.env` file. For the purpose of demo, you need to use your own service account.
 
 ### FCM
 
