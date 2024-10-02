@@ -13,7 +13,7 @@ The purpose of this service is to consume an incoming message from RabbitMQ queu
 
 ### Project config
 
-All of the configuration in the app should stored in `.env` file. You can refer to `.env.sample` file and create a new `.env` file on your local.
+All of the configuration in the project should stored in `.env` file. You can refer to `.env.sample` file and create a new `.env` file on your local.
 
 ### Firebase
 
